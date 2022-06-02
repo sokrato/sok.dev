@@ -1,0 +1,28 @@
+{:lib io.github.sokrato/sok.dev
+ :main io.github.sokrato.dev.build
+
+ :deps
+ {io.github.clojure/tools.build {:git/tag "v0.8.2"
+                                 :git/sha "ba1a2bf"}
+  potemkin/potemkin             {:mvn/version "0.4.5"}}
+
+ :paths          ["src" "target/classes"]
+ :resource-paths ["resources"]
+
+ :tools/usage
+ {:ns-default io.github.sokrato.dev.api
+  ;; see https://clojure.org/reference/deps_and_cli#_tools
+  ;; clj -Tsok io.github.sokrato.dev/exec-fn
+  ;; can be simplified to:
+  ;; clj -Tsok dev/exec-fn
+  :ns-aliases {dev   io.github.sokrato.dev
+               build io.github.sokrato.dev.build}}
+
+ :aliases
+ {;; clojure -Mtest --watch --fail-fast
+  :test  {:extra-deps {lambdaisland/kaocha {:mvn/version "1.66.1034"}}
+          :main-opts  ["-m" "kaocha.runner"]}
+  :build {:extra-deps {io.github.sokrato/sok.dev {:local/root "./"}}
+          :ns-default io.github.sokrato.dev.build}}
+
+ }

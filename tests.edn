@@ -1,0 +1,14 @@
+;; see https://github.com/lambdaisland/kaocha
+;; Run and watch all test suites
+;;   clojure -Mtest --watch --fail-fast
+;; Only run a single test
+;;   clojure -Mtest --focus my.app.foo-test/bar-test
+;; Only run the `unit` suite
+;;   clojure -Mtest unit
+#kaocha/v1
+        {:tests [{:id          :unit
+                  :test-paths  ["test"]
+                  :ns-patterns ["io.github.sokrato.dev.*"]}]
+         ;; :reporter kaocha.report.progress/report
+         ;; :plugins [:kaocha.plugin/profiling :kaocha.plugin/notifier]
+         }
