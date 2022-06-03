@@ -20,7 +20,8 @@
    :resource-paths    ["resources"]
    :java-source-paths ["java"]
    :javac-opts        ["-source" "8" "-target" "8"]
-   :build/include-src true})
+   :build/include-src true
+   :build/compile-clj true})
 
 (defn wrap-defaults [cfg]
   (merge defaults cfg))
@@ -74,18 +75,17 @@
 
 (defn compile' [basis cfg]
   ;; compile java
-  (let [src-dirs (:java-source-paths cfg)]
-    (if (some #(contains-source-file? % ".java") src-dirs)
-      (b/javac {:src-dirs   src-dirs
-                :class-dir  (:class-dir cfg)
-                :javac-opts (:java-opts cfg)
-                :basis      basis})))
+  (if (some #(contains-source-file? % ".java") (:java-source-paths cfg))
+    (b/javac {:src-dirs   (:java-source-paths cfg)
+              :class-dir  (:class-dir cfg)
+              :javac-opts (:java-opts cfg)
+              :basis      basis}))
   ;; compile clj
-  (let [src-dirs (:paths cfg)]
-    (if (some #(contains-source-file? % ".clj") src-dirs)
-      (b/compile-clj {:basis     basis
-                      :src-dirs  src-dirs
-                      :class-dir (:class-dir cfg)}))))
+  (if (and (:build/compile-clj cfg)
+           (some #(contains-source-file? % ".clj") (:paths cfg)))
+    (b/compile-clj {:basis     basis
+                    :src-dirs  (:paths cfg)
+                    :class-dir (:class-dir cfg)})))
 
 (defn compile [_]
   (let [[basis cfg] (get-basis)]
@@ -153,5 +153,4 @@
     (uberjar' basis cfg)))
 
 (defn -main [& args]
-  (println args)
-  (println (System/getProperty "java.class.path")))
+  (println "supported cmd: clean, compile, jar, uberjar"))

@@ -6,3 +6,8 @@ To install this as a tool:
 ```shell
 clj -Ttools install io.github.sokrato/sok.dev '{:local/root "/Users/bytedance/Documents/clj/sok.dev"}' :as dev
 ```
+
+Then use like this:
+```shell
+clojure -Tdev jar
+```

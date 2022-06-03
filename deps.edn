@@ -1,5 +1,5 @@
-{:lib io.github.sokrato/sok.dev
- :main io.github.sokrato.dev.build
+{:lib            io.github.sokrato/sok.dev
+ :main           io.github.sokrato.dev.build
 
  :deps
  {io.github.clojure/tools.build {:git/tag "v0.8.2"
