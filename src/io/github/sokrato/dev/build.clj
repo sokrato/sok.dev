@@ -1,15 +1,13 @@
 (ns io.github.sokrato.dev.build
   (:refer-clojure :exclude [compile])
   (:require
-    [clojure.tools.build.api :as b]
-    [clojure.java.io :as io]
     [clojure.edn :as edn]
-    [clojure.string :as str]
+    [clojure.tools.build.api :as b]
 
     [io.github.sokrato.dev.util
-     :refer [exit fs-parents]])
+     :refer [contains-source-file? exit fs-parents]])
   (:import
-    [java.nio.file Path])
+    (java.nio.file Path))
   (:gen-class))
 
 (def defaults
@@ -64,25 +62,16 @@
   (let [[_ cfg] (get-basis)]
     (clean' cfg)))
 
-(defn contains-source-file? [path ext]
-  (let [f (io/file path)]
-    (and (.isDirectory f)
-         (some
-           (fn [f]
-             (and (.isFile f)
-                  (str/ends-with? (str f) ext)))
-           (file-seq f)))))
-
 (defn compile' [basis cfg]
   ;; compile java
-  (if (some #(contains-source-file? % ".java") (:java-source-paths cfg))
+  (if (some #(contains-source-file? % #{"java"}) (:java-source-paths cfg))
     (b/javac {:src-dirs   (:java-source-paths cfg)
               :class-dir  (:class-dir cfg)
               :javac-opts (:java-opts cfg)
               :basis      basis}))
   ;; compile clj
   (if (and (:build/compile-clj cfg)
-           (some #(contains-source-file? % ".clj") (:paths cfg)))
+           (some #(contains-source-file? % #{"clj" "cljc"}) (:paths cfg)))
     (b/compile-clj {:basis     basis
                     :src-dirs  (:paths cfg)
                     :class-dir (:class-dir cfg)})))
