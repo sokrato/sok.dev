@@ -135,6 +135,7 @@
                               (name (require-lib! cfg))
                               (:version cfg))
            :main      (require-main! cfg)
+           :manifest  (:manifest cfg)
            :basis     basis}))
 
 (defn uberjar [_]
